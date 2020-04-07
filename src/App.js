@@ -4,9 +4,9 @@ import {
   Switch,
   Route
 } from 'react-router-dom'
-import SignIn from './Pages/SignIn.js'
-import SignUp from './Pages/SignUp.js'
-import Room from './Pages/Room.js'
+import SignIn from './Pages/SignIn/SignIn.js'
+import SignUp from './Pages/SignUp/SignUp.js'
+import Room from './Pages/Room/Room.js'
 
 const App = () => {
   return (
