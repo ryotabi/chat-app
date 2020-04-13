@@ -1,7 +1,30 @@
-import React from 'react'
+import React, { useState, useContext } from 'react'
 import { Link } from 'react-router-dom'
+import { Route, Redirect } from 'react-router-dom'
 import styled from 'styled-components'
-const SignIn = () => {
+import firebase from '../../config/firebase.js'
+import { AuthContext } from '../../AuthService.js'
+
+
+const SignIn = ({ history }) => {
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    firebase.auth().signInWithEmailAndPassword(email, password)
+      .then(() => {
+        history.push('/')
+      })
+      .catch(err => {
+        console.log(err)
+      })
+  }
+
+  const user = useContext(AuthContext)
+  if (user) {
+    return <Redirect to='/' />
+  }
+
   return (
     <Wrapper>
       <Title>~ログイン~</Title>
@@ -12,6 +35,9 @@ const SignIn = () => {
             type="email"
             id="email"
             placeholder='email'
+            onChange={(e) => {
+              setEmail(e.target.value)
+            }}
           ></input>
         </div>
         <Passwordwrap>
@@ -20,9 +46,14 @@ const SignIn = () => {
             type="password"
             id="password"
             placeholder='password'
+            onChange={(e) => {
+              setPassword(e.target.value)
+            }}
           ></input>
         </Passwordwrap>
-        <Button type="submit">Login</Button>
+        <Button type="submit"
+          onClick={handleSubmit}
+        >Login</Button>
 
       </Form>
       <Linkwrap>

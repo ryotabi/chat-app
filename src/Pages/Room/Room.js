@@ -1,20 +1,24 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
+import firebase from '../../config/firebase.js'
+import 'firebase/firestore';
+
 
 
 
 const Room = () => {
+  const [messages, setMessages] = useState(null)
 
-  const [messages, setMessages] = useState([
-    {
-      user: "sgw",
-      content: "simple text"
-    },
-    {
-      user: "hnd",
-      content: "simple text"
-    }
-  ])
+  useEffect(() => {
+    firebase.firestore().collection('messages')
+      .onSnapshot((snapshot) => {
+        const messages = snapshot.docs.map(doc => {
+          return doc.data()
+        })
+
+        setMessages(messages)
+      })
+  }, [])
 
   const [value, setValue]
 
@@ -26,7 +30,7 @@ const Room = () => {
     <Wrapper>
       <Title>~チャットルーム~</Title>
       <Chatwrap>
-        {
+        {/* {
           messages.map(message => {
             return (
 
@@ -36,7 +40,7 @@ const Room = () => {
                 <Textwrap><Text>{message.content}</Text></Textwrap>
               </Chattext>
 
-            )
+            ) */}
           })
         }
       </Chatwrap>
@@ -66,6 +70,7 @@ const Room = () => {
 
           <Button type="submit">send</Button>
         </Formwrap>
+        <button onClick={() => firebase.auth().signOut()}>Logout</button>
       </form>
     </Wrapper>
   )

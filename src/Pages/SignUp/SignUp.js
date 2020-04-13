@@ -1,7 +1,24 @@
-import React from 'react'
+import React, { useState, useContext } from 'react'
 import styled from 'styled-components'
+import Redirect from 'react-router-dom'
 import { Link } from 'react-router-dom'
+import firebase from '../../config/firebase.js'
+
 const SignUp = () => {
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    console.log(email)
+    firebase.auth().createUserWithEmailAndPassword(email, password)
+      .catch(err => {
+        console.log(err)
+      })
+
+
+  }
+
+
   return (
     <Wrapper>
       <Title>~新規登録~</Title>
@@ -12,6 +29,9 @@ const SignUp = () => {
             type="email"
             id="email"
             placeholder='email'
+            onChange={(e) => {
+              setEmail(e.target.value)
+            }}
           ></input>
         </div>
         <Passwordwrap>
@@ -20,13 +40,18 @@ const SignUp = () => {
             type="password"
             id="password"
             placeholder='password'
+            onChange={(e) => {
+              setPassword(e.target.value)
+            }}
           ></input>
         </Passwordwrap>
-        <Button type="submit">新規登録</Button>
+        <Button type="submit" onClick={handleSubmit}>新規登録</Button>
 
       </Formwrap>
       <Linkwrap><Link to="/login">登録済みの方はこちら</Link></Linkwrap>
     </Wrapper>
+
+
   )
 }
 
@@ -76,5 +101,6 @@ background-image: linear-gradient(#6795fd 0%, #67ceff 100%);
   line-height:30px;
   text-align:center;
 `
+
 
 export default SignUp
